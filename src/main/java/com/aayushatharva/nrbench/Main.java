@@ -57,6 +57,7 @@ public final class Main {
                     " <TYPE (Tcp, Tcp-JdkSsl, Tcp-OpenSsl, Udp, Http11, Http11-JdkSsl, Http11-OpenSsl, Http2-JdkSsl, Http2-OpenSsl)> " +
                     " <IP> " +
                     " <PORT>");
+            System.out.println("Optional System Property for loading HTTP response data from file: -Ddata.file=<PATH TO FILE>");
             return;
         }
 

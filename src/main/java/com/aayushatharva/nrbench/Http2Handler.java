@@ -18,19 +18,31 @@ import io.netty.handler.codec.http2.Http2HeadersFrame;
 import io.netty.handler.ssl.ApplicationProtocolNames;
 import io.netty.handler.ssl.ApplicationProtocolNegotiationHandler;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+
 public final class Http2Handler extends SimpleChannelInboundHandler<Object> {
 
+    private static final boolean hasDataFile = System.getProperty("data.file") != null;
+
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, Object msg) {
+    protected void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
         if (msg instanceof Http2HeadersFrame headersFrame) {
+            String data;
+            if (hasDataFile) {
+                data = Files.readString(Path.of(System.getProperty("data.file")));
+            } else {
+                data = "Hello World!";
+            }
+
             Http2Headers headers = new DefaultHttp2Headers();
             headers.status("200");
             headers.add(HttpHeaderNames.SERVER, "Netty 4.1 HTTP/2 Server");
-            headers.add(HttpHeaderNames.CONTENT_LENGTH, "12");
+            headers.add(HttpHeaderNames.CONTENT_LENGTH, String.valueOf(data.length()));
             headers.add(HttpHeaderNames.CONTENT_TYPE, HttpHeaderValues.TEXT_PLAIN);
 
-            ByteBuf content = ctx.channel().alloc().buffer(12);
-            ByteBufUtil.writeAscii(content, "Hello World!");
+            ByteBuf content = ctx.channel().alloc().buffer(data.length());
+            ByteBufUtil.writeAscii(content, data);
 
             Http2HeadersFrame http2HeadersFrame = new DefaultHttp2HeadersFrame(headers);
             http2HeadersFrame.stream(headersFrame.stream());
