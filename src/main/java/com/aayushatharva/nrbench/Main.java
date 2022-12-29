@@ -67,6 +67,7 @@ public final class Main {
         System.out.println("Type: " + type);
         System.out.println("IP: " + ip);
         System.out.println("Port: " + port);
+        System.out.println("Data File: " + System.getProperty("data.file"));
 
         if (transport.equalsIgnoreCase("nio")) {
             parentGroup = new NioEventLoopGroup(parentThreads);
