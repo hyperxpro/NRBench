@@ -15,6 +15,8 @@ import io.netty.handler.codec.http.HttpVersion;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import static com.aayushatharva.nrbench.FileUtil.readFileAsString;
+
 public final class Http11Handler extends SimpleChannelInboundHandler<FullHttpRequest> {
 
     private static final boolean hasDataFile = System.getProperty("data.file") != null;
@@ -23,7 +25,7 @@ public final class Http11Handler extends SimpleChannelInboundHandler<FullHttpReq
     protected void channelRead0(ChannelHandlerContext ctx, FullHttpRequest msg) throws Exception {
         String data;
         if (hasDataFile) {
-            data = Files.readString(Path.of(System.getProperty("data.file")));
+            data = readFileAsString(System.getProperty("data.file"));
         } else {
             data = "Hello World!";
         }

@@ -21,6 +21,8 @@ import io.netty.handler.ssl.ApplicationProtocolNegotiationHandler;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import static com.aayushatharva.nrbench.FileUtil.readFileAsString;
+
 public final class Http2Handler extends SimpleChannelInboundHandler<Object> {
 
     private static final boolean hasDataFile = System.getProperty("data.file") != null;
@@ -30,7 +32,7 @@ public final class Http2Handler extends SimpleChannelInboundHandler<Object> {
         if (msg instanceof Http2HeadersFrame headersFrame) {
             String data;
             if (hasDataFile) {
-                data = Files.readString(Path.of(System.getProperty("data.file")));
+                data = readFileAsString(System.getProperty("data.file"));
             } else {
                 data = "Hello World!";
             }
