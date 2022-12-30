@@ -19,7 +19,6 @@ import io.netty.channel.socket.ServerSocketChannel;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioDatagramChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.channel.unix.Unix;
 import io.netty.channel.unix.UnixChannelOption;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpServerCodec;
@@ -187,7 +186,6 @@ public final class Main {
                 .option(ChannelOption.SO_BACKLOG, 50_000)
                 .option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
                 .option(EpollChannelOption.EPOLL_MODE, EpollMode.EDGE_TRIGGERED)
-                .option(UnixChannelOption.SO_REUSEPORT, true)
                 .option(ChannelOption.WRITE_BUFFER_WATER_MARK, new WriteBufferWaterMark(8 * 1024 * 1024, 16 * 1024 * 1024))
                 .childOption(ChannelOption.TCP_NODELAY, true)
                 .childOption(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
@@ -203,20 +201,13 @@ public final class Main {
                     }
                 });
 
-        int bindRounds = 1;
-        if (isNative) {
-            bindRounds = childThreads;
-        }
-
-        for (int i = 0; i < bindRounds; i++) {
-            serverBootstrap.bind(ip, port).addListener((ChannelFutureListener) future -> {
-                if (future.isSuccess()) {
-                    System.out.println("Successfully started HTTP/1.1 server");
-                } else {
-                    System.out.println("Failed to start HTTP/1.1 server: " + future.cause().getCause().getMessage());
-                }
-            });
-        }
+        serverBootstrap.bind(ip, port).addListener((ChannelFutureListener) future -> {
+            if (future.isSuccess()) {
+                System.out.println("Successfully started HTTP/1.1 server");
+            } else {
+                System.out.println("Failed to start HTTP/1.1 server: " + future.cause().getCause().getMessage());
+            }
+        });
     }
 
     private static void http2(SslContext sslContext) {
