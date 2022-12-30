@@ -22,17 +22,18 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import static com.aayushatharva.nrbench.FileUtil.readFileAsString;
+import static com.aayushatharva.nrbench.Main.DATA_FILE;
 
 public final class Http2Handler extends SimpleChannelInboundHandler<Object> {
 
-    private static final boolean hasDataFile = System.getProperty("data.file") != null;
+    private static final boolean hasDataFile = DATA_FILE != null;
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
         if (msg instanceof Http2HeadersFrame headersFrame) {
             String data;
             if (hasDataFile) {
-                data = readFileAsString(System.getProperty("data.file"));
+                data = readFileAsString(DATA_FILE);
             } else {
                 data = "Hello World!";
             }

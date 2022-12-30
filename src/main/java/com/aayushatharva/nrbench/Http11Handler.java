@@ -16,6 +16,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import static com.aayushatharva.nrbench.FileUtil.readFileAsString;
+import static com.aayushatharva.nrbench.Main.DATA_FILE;
 
 public final class Http11Handler extends SimpleChannelInboundHandler<FullHttpRequest> {
 
@@ -25,7 +26,7 @@ public final class Http11Handler extends SimpleChannelInboundHandler<FullHttpReq
     protected void channelRead0(ChannelHandlerContext ctx, FullHttpRequest msg) throws Exception {
         String data;
         if (hasDataFile) {
-            data = readFileAsString(System.getProperty("data.file"));
+            data = readFileAsString(DATA_FILE);
         } else {
             data = "Hello World!";
         }

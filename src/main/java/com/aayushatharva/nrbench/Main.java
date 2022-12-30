@@ -29,6 +29,7 @@ import io.netty.incubator.channel.uring.IOUringServerSocketChannel;
 
 public final class Main {
 
+    public static final String DATA_FILE = System.getProperty("data.file");
     private static String ip;
     private static int port;
     private static EventLoopGroup parentGroup;
@@ -67,7 +68,7 @@ public final class Main {
         System.out.println("Type: " + type);
         System.out.println("IP: " + ip);
         System.out.println("Port: " + port);
-        System.out.println("Data File: " + System.getProperty("data.file"));
+        System.out.println("Data File: " + DATA_FILE);
 
         if (transport.equalsIgnoreCase("nio")) {
             parentGroup = new NioEventLoopGroup(parentThreads);
