@@ -12,21 +12,16 @@ import io.netty.handler.codec.http.HttpHeaderValues;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.HttpVersion;
 
-import java.io.RandomAccessFile;
-import java.nio.MappedByteBuffer;
-import java.nio.channels.FileChannel;
 import java.nio.charset.StandardCharsets;
 
 import static com.aayushatharva.nrbench.Main.DATA_FILE;
 
 public final class Http11Handler extends SimpleChannelInboundHandler<FullHttpRequest> {
 
-    private static final boolean hasDataFile = System.getProperty("data.file") != null;
-
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, FullHttpRequest msg) throws Exception {
         String data;
-        if (hasDataFile) {
+        if (DATA_FILE != null) {
             data = StandardCharsets.UTF_8.decode(MemoryMappedCachedFile.load(DATA_FILE).duplicate()).toString();
         } else {
             data = "Hello World!";

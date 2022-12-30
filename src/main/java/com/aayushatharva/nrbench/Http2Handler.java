@@ -18,19 +18,18 @@ import io.netty.handler.codec.http2.Http2HeadersFrame;
 import io.netty.handler.ssl.ApplicationProtocolNames;
 import io.netty.handler.ssl.ApplicationProtocolNegotiationHandler;
 
-import static com.aayushatharva.nrbench.MemoryMappedCachedFile.readFileAsString;
+import java.nio.charset.StandardCharsets;
+
 import static com.aayushatharva.nrbench.Main.DATA_FILE;
 
 public final class Http2Handler extends SimpleChannelInboundHandler<Object> {
-
-    private static final boolean hasDataFile = DATA_FILE != null;
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
         if (msg instanceof Http2HeadersFrame headersFrame) {
             String data;
-            if (hasDataFile) {
-                data = readFileAsString(DATA_FILE);
+            if (DATA_FILE != null) {
+                data = StandardCharsets.UTF_8.decode(MemoryMappedCachedFile.load(DATA_FILE).duplicate()).toString();
             } else {
                 data = "Hello World!";
             }
