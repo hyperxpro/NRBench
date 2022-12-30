@@ -59,6 +59,5 @@ public final class Http11Handler extends SimpleChannelInboundHandler<FullHttpReq
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
         // Swallow
-        cause.printStackTrace();
     }
 }
