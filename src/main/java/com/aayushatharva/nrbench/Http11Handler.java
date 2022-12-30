@@ -27,17 +27,6 @@ import static com.aayushatharva.nrbench.Main.DATA_FILE;
 public final class Http11Handler extends SimpleChannelInboundHandler<FullHttpRequest> {
 
     private static final boolean hasDataFile = System.getProperty("data.file") != null;
-    private static final DefaultFileRegion dataFileRegion;
-
-    static {
-        try {
-            RandomAccessFile raf = new RandomAccessFile(new File(System.getProperty("data.file")), "r");
-            long fileLength = raf.length();
-            dataFileRegion = new DefaultFileRegion(raf.getChannel(), 0, fileLength);
-        } catch (Exception ex) {
-            throw new RuntimeException(ex);
-        }
-    }
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, FullHttpRequest msg) throws Exception {
@@ -47,8 +36,11 @@ public final class Http11Handler extends SimpleChannelInboundHandler<FullHttpReq
             httpResponse.headers().add(HttpHeaderNames.TRANSFER_ENCODING, HttpHeaderValues.CHUNKED);
             httpResponse.headers().add(HttpHeaderNames.CONTENT_TYPE, HttpHeaderValues.TEXT_PLAIN);
 
+            RandomAccessFile raf = new RandomAccessFile(new File(System.getProperty("data.file")), "r");
+            long fileLength = raf.length();
+
             ctx.write(httpResponse);
-            ctx.write(dataFileRegion.retain());
+            ctx.write(new DefaultFileRegion(raf.getChannel(), 0, fileLength));
             ctx.writeAndFlush(LastHttpContent.EMPTY_LAST_CONTENT);
         } else {
             String data = "Hello World!";
