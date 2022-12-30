@@ -16,33 +16,18 @@ import java.io.RandomAccessFile;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
-import static com.aayushatharva.nrbench.FileUtil.readFileAsString;
 import static com.aayushatharva.nrbench.Main.DATA_FILE;
 
 public final class Http11Handler extends SimpleChannelInboundHandler<FullHttpRequest> {
 
     private static final boolean hasDataFile = System.getProperty("data.file") != null;
-    private static final MappedByteBuffer buffer;
-
-    static {
-        try (RandomAccessFile file = new RandomAccessFile(DATA_FILE, "r")) {
-            FileChannel channel = file.getChannel();
-
-            // Map the file into memory
-            buffer = channel.map(FileChannel.MapMode.READ_ONLY, 0, channel.size());
-        } catch (Exception ex) {
-            throw new RuntimeException(ex);
-        }
-    }
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, FullHttpRequest msg) throws Exception {
         String data;
         if (hasDataFile) {
-            data = StandardCharsets.UTF_8.decode(buffer.duplicate()).toString();
+            data = StandardCharsets.UTF_8.decode(MemoryMappedCachedFile.load(DATA_FILE).duplicate()).toString();
         } else {
             data = "Hello World!";
         }

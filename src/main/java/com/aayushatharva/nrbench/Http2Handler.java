@@ -18,10 +18,7 @@ import io.netty.handler.codec.http2.Http2HeadersFrame;
 import io.netty.handler.ssl.ApplicationProtocolNames;
 import io.netty.handler.ssl.ApplicationProtocolNegotiationHandler;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-
-import static com.aayushatharva.nrbench.FileUtil.readFileAsString;
+import static com.aayushatharva.nrbench.MemoryMappedCachedFile.readFileAsString;
 import static com.aayushatharva.nrbench.Main.DATA_FILE;
 
 public final class Http2Handler extends SimpleChannelInboundHandler<Object> {
