@@ -40,7 +40,7 @@ public final class Http11Handler extends SimpleChannelInboundHandler<FullHttpReq
             long fileLength = raf.length();
 
             ctx.write(new DefaultFileRegion(raf.getChannel(), 0, fileLength));
-            ctx.writeAndFlush(LastHttpContent.EMPTY_LAST_CONTENT).addListener(future -> raf.close());
+            ctx.writeAndFlush(LastHttpContent.EMPTY_LAST_CONTENT);
         } else {
             String data = "Hello World!";
             ByteBuf content = ctx.channel().alloc().buffer(data.length());
