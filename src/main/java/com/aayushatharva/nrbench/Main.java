@@ -7,8 +7,10 @@ import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
+import io.netty.channel.epoll.EpollChannelOption;
 import io.netty.channel.epoll.EpollDatagramChannel;
 import io.netty.channel.epoll.EpollEventLoopGroup;
+import io.netty.channel.epoll.EpollMode;
 import io.netty.channel.epoll.EpollServerSocketChannel;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.DatagramChannel;
@@ -182,6 +184,7 @@ public final class Main {
                 .channel(serverSocketChannel)
                 .option(ChannelOption.SO_BACKLOG, 50_000)
                 .option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
+                .option(EpollChannelOption.EPOLL_MODE, EpollMode.EDGE_TRIGGERED)
                 .childOption(ChannelOption.TCP_NODELAY, true)
                 .childOption(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
                 .childHandler(new ChannelInitializer<SocketChannel>() {
