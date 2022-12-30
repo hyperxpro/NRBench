@@ -42,7 +42,7 @@ public final class Http11Handler extends SimpleChannelInboundHandler<FullHttpReq
     protected void channelRead0(ChannelHandlerContext ctx, FullHttpRequest msg) throws Exception {
         String data;
         if (hasDataFile) {
-            data = StandardCharsets.UTF_8.decode(buffer).toString();
+            data = StandardCharsets.UTF_8.decode(buffer.duplicate()).toString();
         } else {
             data = "Hello World!";
         }
