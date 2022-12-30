@@ -36,7 +36,7 @@ public final class Http11Handler extends SimpleChannelInboundHandler<FullHttpReq
             httpResponse.headers().add(HttpHeaderNames.TRANSFER_ENCODING, HttpHeaderValues.CHUNKED);
             httpResponse.headers().add(HttpHeaderNames.CONTENT_TYPE, HttpHeaderValues.TEXT_PLAIN);
 
-            RandomAccessFile raf = new RandomAccessFile(new File(System.getProperty("data.file")), "r");
+            RandomAccessFile raf = new RandomAccessFile(new File(DATA_FILE), "r");
             long fileLength = raf.length();
 
             ctx.writeAndFlush(httpResponse);
