@@ -39,8 +39,8 @@ public final class Http11Handler extends SimpleChannelInboundHandler<FullHttpReq
             RandomAccessFile raf = new RandomAccessFile(new File(System.getProperty("data.file")), "r");
             long fileLength = raf.length();
 
-            ctx.write(httpResponse);
-            ctx.write(new DefaultFileRegion(raf.getChannel(), 0, fileLength));
+            ctx.writeAndFlush(httpResponse);
+            ctx.writeAndFlush(new DefaultFileRegion(raf.getChannel(), 0, fileLength));
             ctx.writeAndFlush(LastHttpContent.EMPTY_LAST_CONTENT);
         } else {
             String data = "Hello World!";
