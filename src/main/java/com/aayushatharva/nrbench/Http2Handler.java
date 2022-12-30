@@ -17,6 +17,7 @@ import io.netty.handler.codec.http2.Http2Headers;
 import io.netty.handler.codec.http2.Http2HeadersFrame;
 import io.netty.handler.ssl.ApplicationProtocolNames;
 import io.netty.handler.ssl.ApplicationProtocolNegotiationHandler;
+import io.netty.handler.stream.ChunkedWriteHandler;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -79,6 +80,7 @@ public final class Http2Handler extends SimpleChannelInboundHandler<Object> {
             } else if (protocol.equalsIgnoreCase(ApplicationProtocolNames.HTTP_1_1)) {
                 ctx.pipeline().addLast(new HttpServerCodec());
                 ctx.pipeline().addLast(new HttpObjectAggregator(1024 * 10));
+                ctx.pipeline().addLast(new ChunkedWriteHandler());
                 ctx.pipeline().addLast(new Http11Handler());
             } else {
                 throw new IllegalArgumentException("Unsupported ALPN Protocol: " + protocol);
